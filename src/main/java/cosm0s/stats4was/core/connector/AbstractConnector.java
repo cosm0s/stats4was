@@ -3,6 +3,7 @@ package cosm0s.stats4was.core.connector;
 import com.ibm.websphere.management.AdminClient;
 import com.ibm.websphere.management.AdminClientFactory;
 import com.ibm.websphere.management.exception.ConnectorException;
+import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.utils.DaemonContext;
 
@@ -17,7 +18,7 @@ public abstract class AbstractConnector {
 
     public AbstractConnector(){}
 
-    public void connect(){
+    public void connect() throws Stats4WasException {
         Properties properties = createProperties();
         if(properties != null) {
             L4j.getL4j().debug("Connecting to dmgr:" + DaemonContext.instance().getProperty("was-host") + ":" + DaemonContext.instance().getProperty("was-port"));
@@ -40,6 +41,6 @@ public abstract class AbstractConnector {
         }
     }
 
-    public abstract Properties createProperties();
+    public abstract Properties createProperties() throws Stats4WasException;
 
 }

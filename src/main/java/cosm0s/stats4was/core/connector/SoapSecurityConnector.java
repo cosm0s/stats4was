@@ -1,7 +1,7 @@
 package cosm0s.stats4was.core.connector;
 
 import com.ibm.websphere.management.AdminClient;
-import cosm0s.stats4was.log.L4j;
+import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.utils.DaemonContext;
 import cosm0s.stats4was.utils.UtilsFile;
 
@@ -14,7 +14,7 @@ public class SoapSecurityConnector extends AbstractConnector {
     public SoapSecurityConnector(){}
 
     @Override
-    public Properties createProperties() {
+    public Properties createProperties() throws Stats4WasException {
         Properties properties = new Properties();
         properties.setProperty(AdminClient.CONNECTOR_TYPE, AdminClient.CONNECTOR_TYPE_SOAP);
         properties.setProperty(AdminClient.CONNECTOR_HOST, DaemonContext.instance().getProperty("was-host"));
@@ -29,8 +29,7 @@ public class SoapSecurityConnector extends AbstractConnector {
             properties.setProperty("javax.net.ssl.trustStorePassword", DaemonContext.instance().getProperty("was-trustStorePassword"));
             properties.setProperty("javax.net.ssl.keyStorePassword", DaemonContext.instance().getProperty("was-keyStorePassword"));
         } else {
-            L4j.getL4j().error("Can't connect to WebSphere dmgr. Any file don't exist");
-            return null;
+            throw new Stats4WasException("Can't connect to WebSphere dmgr. Any file don't exist");
         }
         return properties;
     }
