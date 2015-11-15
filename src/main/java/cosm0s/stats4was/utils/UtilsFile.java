@@ -6,6 +6,8 @@ import java.io.File;
 
 public class UtilsFile {
 
+    private UtilsFile(){}
+
     public static boolean checkFile(String filePath){
         if(filePath != null){
             File file = new File(filePath);
