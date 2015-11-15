@@ -24,7 +24,7 @@ public class L4j {
         ConsoleAppender console = new ConsoleAppender();
         console.setName(DaemonContext.instance().getProperty("appName"));
         console.setLayout(new PatternLayout(DaemonContext.instance().getProperty("l4jPattern")));
-        console.setThreshold(Level.INFO);
+        console.setThreshold(Level.toLevel(DaemonContext.instance().getProperty("l4jLevel")));
         console.activateOptions();
         Logger.getRootLogger().addAppender(console);
         log = Logger.getLogger(DaemonContext.instance().getProperty("l4jgetLogger"));
