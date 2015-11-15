@@ -1,10 +1,8 @@
 package cosm0s.stats4was.utils;
 
-
 import cosm0s.stats4was.log.L4j;
 
 import java.io.File;
-import java.util.List;
 
 public class UtilsFile {
 
