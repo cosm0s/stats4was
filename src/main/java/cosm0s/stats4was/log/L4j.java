@@ -1,5 +1,6 @@
 package cosm0s.stats4was.log;
 
+import cosm0s.stats4was.utils.Constants;
 import cosm0s.stats4was.utils.DaemonContext;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
@@ -22,12 +23,12 @@ public class L4j {
 
     private L4j(){
         ConsoleAppender console = new ConsoleAppender();
-        console.setName(DaemonContext.instance().getProperty("appName"));
-        console.setLayout(new PatternLayout(DaemonContext.instance().getProperty("l4jPattern")));
-        console.setThreshold(Level.toLevel(DaemonContext.instance().getProperty("l4jLevel")));
+        console.setName(Constants.appName);
+        console.setLayout(new PatternLayout(DaemonContext.instance().getProperty("LogFormat")));
+        console.setThreshold(Level.toLevel(DaemonContext.instance().getProperty("LogLevel")));
         console.activateOptions();
         Logger.getRootLogger().addAppender(console);
-        log = Logger.getLogger(DaemonContext.instance().getProperty("l4jgetLogger"));
+        log = Logger.getLogger(DaemonContext.instance().getProperty("LogGetLogger"));
 
     }
 
@@ -42,15 +43,15 @@ public class L4j {
      */
     public void setConfig(String filename, String level) {
         FileAppender fileAppender = new FileAppender();
-        fileAppender.setName(DaemonContext.instance().getProperty("appName"));
+        fileAppender.setName(Constants.appName);
         fileAppender.setFile(filename);
-        fileAppender.setLayout(new PatternLayout(DaemonContext.instance().getProperty("l4jPatternConfig")));
+        fileAppender.setLayout(new PatternLayout(DaemonContext.instance().getProperty("LogFormatConfig")));
         fileAppender.setThreshold(Level.toLevel(level));
         fileAppender.setAppend(true);
         fileAppender.activateOptions();
         Logger.getRootLogger().getLoggerRepository().resetConfiguration();
         Logger.getRootLogger().addAppender(fileAppender);
-        log = Logger.getLogger(DaemonContext.instance().getProperty("appName"));
+        log = Logger.getLogger(Constants.appName);
     }
 
     public void critical(String msg) {

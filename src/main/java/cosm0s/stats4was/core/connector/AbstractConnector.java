@@ -21,7 +21,7 @@ public abstract class AbstractConnector {
     public void connect() throws Stats4WasException {
         Properties properties = createProperties();
         if(properties != null) {
-            L4j.getL4j().debug("Connecting to dmgr:" + DaemonContext.instance().getProperty("was-host") + ":" + DaemonContext.instance().getProperty("was-port"));
+            L4j.getL4j().debug("Connecting to dmgr:" + DaemonContext.instance().getProperty("HostName") + ":" + DaemonContext.instance().getProperty("Port"));
             this.createAdminClient(properties);
             if(this.adminClient != null) {
                 this.state = State.CONNECTED;

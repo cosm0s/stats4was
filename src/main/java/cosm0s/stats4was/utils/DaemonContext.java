@@ -26,9 +26,26 @@ public class DaemonContext {
 
     private static void readFileProperties(){
         try {
-            FileInputStream fileInputStream = new FileInputStream(Constants.PropertiePath);
+            FileInputStream fileInputStream = new FileInputStream(Constants.PropertiePath + "stats4was.properties");
             context.properties = new Properties();
             context.properties.load(fileInputStream);
+            if(context.getProperty("HostName") == null){
+                context.setProperty("HostName", "localhost");
+            }
+            if(context.getProperty("Port") == null){
+                context.setProperty("Port", "8879");
+            }
+            if(context.getProperty("Security") == null){
+                context.setProperty("Security", "false");
+            }
+            if(context.getProperty("Connector") == null){
+                context.setProperty("Connector", "soap");
+            }
+            if(context.getProperty("LogLevel") == null){
+                context.setProperty("LogLevel", "info");
+            }
+
+            loadConnecorProperties();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
@@ -36,6 +53,11 @@ public class DaemonContext {
         }
     }
 
+    private static void loadConnecorProperties() throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(Constants.PropertiePath + context.getProperty("Connector") + ".properties");
+        context.properties.load(fileInputStream);
+
+    }
     public String getProperty(String key){
         return this.properties.getProperty(key);
     }
