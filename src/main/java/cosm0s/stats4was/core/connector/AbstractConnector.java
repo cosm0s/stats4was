@@ -5,7 +5,6 @@ import com.ibm.websphere.management.AdminClientFactory;
 import com.ibm.websphere.management.exception.ConnectorException;
 import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.log.L4j;
-import cosm0s.stats4was.utils.DaemonContext;
 
 import java.util.Properties;
 
@@ -21,7 +20,6 @@ public abstract class AbstractConnector {
     public void connect() throws Stats4WasException {
         Properties properties = createProperties();
         if(properties != null) {
-            L4j.getL4j().debug("Connecting to dmgr:" + DaemonContext.instance().getProperty("HostName") + ":" + DaemonContext.instance().getProperty("Port"));
             this.createAdminClient(properties);
             if(this.adminClient != null) {
                 this.state = State.CONNECTED;
@@ -42,5 +40,17 @@ public abstract class AbstractConnector {
     }
 
     public abstract Properties createProperties() throws Stats4WasException;
+
+    public AdminClient getAdminClient() {
+        return adminClient;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 
 }

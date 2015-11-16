@@ -1,4 +1,6 @@
-package cosm0s.stats4was.core.connector;
+package cosm0s.stats4was.core.connector.RMI;
+
+import cosm0s.stats4was.core.connector.AbstractConnector;
 
 import java.util.Properties;
 
