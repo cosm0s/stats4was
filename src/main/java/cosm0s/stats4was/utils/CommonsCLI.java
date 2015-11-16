@@ -1,8 +1,7 @@
-package cosm0s.stats4was.core;
+package cosm0s.stats4was.utils;
 
 import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.log.L4j;
-import org.apache.commons.cli.AmbiguousOptionException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;

@@ -1,10 +1,9 @@
 package cosm0s.stats4was.core;
 
-import cosm0s.stats4was.core.connector.AbstractConnector;
 import cosm0s.stats4was.core.connector.ManagementConnection;
 import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.log.L4j;
-import cosm0s.stats4was.utils.DaemonContext;
+import cosm0s.stats4was.utils.CommonsCLI;
 
 
 import java.util.Map;
