@@ -29,7 +29,9 @@ public class ManagementConnection {
                         abstractConnector = soapConnectorFactory.createBasicConnector();
                     }
                 }
-                abstractConnector.connect();
+                if(abstractConnector != null){
+                    abstractConnector.connect();
+                    }
                 if(abstractConnector == null || abstractConnector.adminClient == null) {
                     L4j.getL4j().info("Connection WebSphere dmgr timeout.");
                     L4j.getL4j().info("Reconnect in " + DaemonContext.instance().getProperty("Timeout") + " seconds");
