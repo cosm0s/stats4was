@@ -2,7 +2,7 @@ package cosm0s.stats4was.core.stats;
 
 import cosm0s.stats4was.core.connector.ManagementConnection;
 import cosm0s.stats4was.domain.BeanInfo;
-import cosm0s.stats4was.utils.MBeansManager;
+import cosm0s.stats4was.utils.MBeansUtils;
 
 import javax.management.ObjectName;
 import java.util.LinkedList;
@@ -19,9 +19,9 @@ public class ListBeans implements OptionLauncher {
     @Override
     public void start() {
         this.managementConnection.connect();
-        MBeansManager mbeansManager = new MBeansManager(this.managementConnection.getConnector().getAdminClient());
+        MBeansUtils mbeansUtils = new MBeansUtils(this.managementConnection.getConnector().getAdminClient());
         List<BeanInfo> beanInfos = new LinkedList<BeanInfo>();
-        for(ObjectName objectName: mbeansManager.getMBeans(query)){
+        for(ObjectName objectName: mbeansUtils.getMBeans(query)){
             beanInfos.add(new BeanInfo(objectName.getKeyPropertyList()));
         }
         for(BeanInfo beanInfo:beanInfos){
