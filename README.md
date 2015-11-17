@@ -1,6 +1,13 @@
+Stats4Was
+=========
+[![Build Status](https://travis-ci.org/cosm0s/stats4was.png)](https://travis-ci.org/cosm0s/stats4was)
+
+requirements
+------------
+Java 1.7
+
 Installation
 ============
-
 
 Use SOAP connector
 ------------------
