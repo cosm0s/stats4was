@@ -5,6 +5,7 @@ import cosm0s.stats4was.log.L4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
@@ -22,15 +23,23 @@ public class CommonsCLI {
         Map<String, String> result = new HashMap<String, String>();
 
         CommandLineParser commandLineParser = new DefaultParser();
-
+        HelpFormatter helpFormatter = new HelpFormatter();
+        Options options = generateOptions();
+        CommandLine commandLine;
         try {
-            CommandLine commandLine = commandLineParser.parse(generateOptions(), args);
+            commandLine = commandLineParser.parse(options, args);
             int countUniqueArg = 0;
+            if(commandLine.hasOption("h")){
+                helpFormatter.printHelp("stats4was", options);
+            }
             if (commandLine.hasOption("host")) {
                 result.put("host", commandLine.getOptionValue("host"));
             }
             if (commandLine.hasOption("port")) {
                 result.put("port", commandLine.getOptionValue("port"));
+            }
+            if (commandLine.hasOption("verbose")) {
+                result.put("verbose", commandLine.getOptionValue("true"));
             }
             if (commandLine.hasOption("lb")) {
                 result.put("option", "lb");
@@ -41,7 +50,8 @@ public class CommonsCLI {
                     result.put("option", "lo");
                     countUniqueArg++;
                 } else {
-                    throw new Stats4WasException("Only can select one option");
+                    L4j.getL4j().error("stats4was - Only can select one option, lb, lo, la or v");
+                    helpFormatter.printHelp("stats4was", options);
                 }
             }
             if (commandLine.hasOption("la")) {
@@ -49,12 +59,20 @@ public class CommonsCLI {
                     result.put("option", "la");
                     countUniqueArg++;
                 } else {
-                    throw new Stats4WasException("Only can select one option");
+                    helpFormatter.printHelp("stats4was - Only can select one option, lb, lo, la or v", options);
+                }
+            }
+            if (commandLine.hasOption("v")) {
+                if (countUniqueArg == 0) {
+                    result.put("option", "v");
+                    countUniqueArg++;
+                } else {
+                    helpFormatter.printHelp("stats4was - Only can select one option, lb, lo, la or v", options);
                 }
             }
 
         } catch (UnrecognizedOptionException ex) {
-            L4j.getL4j().error("The unrecognized argument");
+            helpFormatter.printHelp("stats4was - unrecognized argument", options);
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
@@ -63,11 +81,14 @@ public class CommonsCLI {
 
     private static Options generateOptions(){
         Options options = new Options();
-        options.addOption("lb", "--list-beans", false, "List beans");
-        options.addOption("lo", "--list-beans-operations", false, "List beans operations");
-        options.addOption("la", "--list-beans-attributes", false, "List beans attributes");
-        options.addOption("host", true, "force host dmgr");
-        options.addOption("port", true, "force port dmgr");
+        options.addOption("lb", "list-beans", false, "Show list of server beans");
+        options.addOption("lo", "list-bean-options", false, "Show options of beans");
+        options.addOption("la", "list-bean-attributes", false, "Show attributes of beans");
+        options.addOption("verbose", false, "verbose");
+        options.addOption("host", true, "Force host. Host where DMGR is located");
+        options.addOption("port", true, "Force port dmgr. Port to the DMGR server");
+        options.addOption("v", "version", false, "Show  cellhealth-ng version");
+        options.addOption("h", "help", false, "Show this help");
         return options;
     }
 }

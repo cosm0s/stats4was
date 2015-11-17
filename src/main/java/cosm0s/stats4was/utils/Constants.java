@@ -8,4 +8,6 @@ public class Constants {
 
     public static final String appName = "stats4was";
 
+    public static final String version = "1.0-SNAPSHOT";
+
 }
