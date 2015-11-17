@@ -9,7 +9,7 @@ public class DaemonContextTest {
     public void getDaemonContextHost(){
 
         //Set in the system properties config-path to the DaemonContext
-        System.setProperty("config-path", "resources/conf/stats4was.properties");
+        System.setProperty("config-path", "resources/conf/");
 
         assertNotNull(DaemonContext.instance().getProperty("HostName"));
         DaemonContext.instance().setProperty("test", "test");
