@@ -1,7 +1,18 @@
 package cosm0s.stats4was.core.stats;
 
-/**
- * Created by Alberto Pascual Corpas on 16/11/15.
- */
-public class ListOperation {
+import cosm0s.stats4was.core.connector.ManagementConnection;
+
+public class ListOperation implements OptionLauncher {
+
+    private ManagementConnection managementConnection;
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void setManagementConnection(ManagementConnection managementConnection){
+        this.managementConnection = managementConnection;
+    }
 }
