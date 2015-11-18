@@ -41,6 +41,7 @@ public class UtilsFileTest {
 
     @Test(expected=NullPointerException.class)
     public void testPrintNull(){
+        System.setProperty("config-path", "resources/conf/");
         UtilsFile.print("", null);
     }
 
