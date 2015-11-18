@@ -13,9 +13,7 @@ public class UtilsFileTest {
 
     @Test
     public void checkFileTest(){
-        DaemonContext.instance().setProperty("LogFormat", "%d [%p|%c|%C{1}] %m%n");
-        DaemonContext.instance().setProperty("LogLevel", "%d [%-5p][%r] %t | %x [%c] %m%n");
-        DaemonContext.instance().setProperty("LogGetLogger", "default");
+        System.setProperty("config-path", "resources/conf/");
 
         String properties = "resources/conf/soap.properties";
         String stats4was = "resources/conf/stats4was.properties";
