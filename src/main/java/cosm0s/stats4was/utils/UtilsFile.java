@@ -3,6 +3,8 @@ package cosm0s.stats4was.utils;
 import cosm0s.stats4was.log.L4j;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class UtilsFile {
 
@@ -34,5 +36,38 @@ public class UtilsFile {
             }
         }
         return check;
+    }
+
+    public static void print(String line, File file) {
+        L4j.getL4j().info(line);
+        FileWriter fileWriter;
+        try {
+            fileWriter = new FileWriter(file, true);
+            line = line.replace(Constants.boldText, "");
+            line = line.replace(Constants.plainText, "");
+            line = line + "\n";
+            fileWriter.write(line);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static File getFile(String name) throws IOException {
+        int count = 0;
+        boolean fileNameFound = false;
+        File file;
+        do {
+            String fileName = DaemonContext.instance().getProperty("PathListReturn") + name + ((count == 0)?"":String.valueOf(count)) + ".info";
+            file = new File(fileName);
+            if(!file.exists()){
+                L4j.getL4j().info("Creating file: " + file.getAbsoluteFile());
+                file.createNewFile();
+                fileNameFound = true;
+            } else {
+                count++;
+            }
+        } while(!fileNameFound);
+        return file;
     }
 }

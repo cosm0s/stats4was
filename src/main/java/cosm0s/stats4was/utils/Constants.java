@@ -10,4 +10,8 @@ public class Constants {
 
     public static final String version = "1.0-SNAPSHOT";
 
+    public static final String plainText = "\033[0;0m";
+
+    public static final String boldText = "\033[0;1m";
+
 }
