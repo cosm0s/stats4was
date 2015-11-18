@@ -1,4 +1,6 @@
+import cosm0s.stats4was.utils.DaemonContext;
 import cosm0s.stats4was.utils.UtilsFile;
+
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -11,6 +13,9 @@ public class UtilsFileTest {
 
     @Test
     public void checkFileTest(){
+        DaemonContext.instance().setProperty("LogFormat", "%d [%p|%c|%C{1}] %m%n");
+        DaemonContext.instance().setProperty("LogLevel", "%d [%-5p][%r] %t | %x [%c] %m%n");
+        DaemonContext.instance().setProperty("LogGetLogger", "default");
 
         String properties = "resources/conf/soap.properties";
         String stats4was = "resources/conf/stats4was.properties";
