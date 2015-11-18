@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * SoapBasicConnector contain basic and security properties for the websphere connection throuth soap protocol
+ */
 public class SoapSecurityConnector extends AbstractConnector {
 
     private String host;
@@ -41,6 +44,10 @@ public class SoapSecurityConnector extends AbstractConnector {
         return properties;
     }
 
+    /**
+     * Check All files that the connector need for connect to webspehre
+     * @return true if all files exist
+     */
     private boolean checkAllFiles(){
         List<String> filePaths = new LinkedList<String>();
         filePaths.add(DaemonContext.instance().getProperty("SoapClientProps"));

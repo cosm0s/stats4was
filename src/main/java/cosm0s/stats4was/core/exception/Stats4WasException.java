@@ -1,6 +1,5 @@
 package cosm0s.stats4was.core.exception;
 
-
 import cosm0s.stats4was.log.L4j;
 
 public class Stats4WasException extends Exception {

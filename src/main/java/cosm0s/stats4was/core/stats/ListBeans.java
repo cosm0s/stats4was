@@ -4,20 +4,14 @@ import cosm0s.stats4was.core.connector.ManagementConnection;
 import cosm0s.stats4was.domain.BeanInfo;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.utils.Constants;
-import cosm0s.stats4was.utils.DaemonContext;
 import cosm0s.stats4was.utils.MBeansUtils;
 import cosm0s.stats4was.utils.UtilsFile;
 
 import javax.management.ObjectName;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 
 public class ListBeans implements OptionLauncher {
 
@@ -31,8 +25,6 @@ public class ListBeans implements OptionLauncher {
     public void start() {
         this.managementConnection.connect();
         this.showInL4j();
-
-
     }
 
     @Override

@@ -7,6 +7,9 @@ import cosm0s.stats4was.utils.UtilsFile;
 
 import java.util.Properties;
 
+/**
+ * SoapBasicConnector contain basic properties for the websphere connection throuth soap protocol
+ */
 public class SoapBasicConnector extends AbstractConnector {
 
     private String host;
