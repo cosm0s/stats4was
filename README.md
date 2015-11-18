@@ -6,6 +6,21 @@ requirements
 ------------
 Java 1.7
 
+How To
+============
+
+You can use this collector as application whit ./stats4was.sh or also can install daemon whit our installation script
+
+Options
+-------
+
+-lb -port 8879 -host localhost
+```
+2015-11-18 22:23:35,522 [INFO|default|L4j] name:Scheduler_Config_Helper type:WASSchedulerCfgHelper cell:#### node:#### process:#### spec:1.0  mbeanIdentifier:null version:8.5.5.4 platform:#### j2eeType:#### J2EEServer:#### Server:#### mbeanIdentifier:Scheduler_Config_Helper
+2015-11-18 22:23:35,523 [INFO|default|L4j] name:CacheableTokenMBean type:CacheableTokenMBean cell:#### node:#### process:#### spec:1.0  mbeanIdentifier:null version:8.5.5.4 platform:#### j2eeType:###~ J2EEServer:null Server:null mbeanIdentifier:CacheableTokenMBean
+2015-11-18 22:23:35,523 [INFO|default|L4j] name:SoapConnectorThreadPool type:ThreadPool cell:#### node:#### process:#### spec:1.0  mbeanIdentifier:null version:8.5.5.4 platform:#### j2eeType:null J2EEServer:null Server:null mbeanIdentifier:SoapConnectorThreadPool
+```
+
 Installation
 ============
 
