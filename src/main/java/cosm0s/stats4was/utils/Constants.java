@@ -14,4 +14,6 @@ public class Constants {
 
     public static final String boldText = "\033[0;1m";
 
+    public static final String queryAll = "*:*";
+
 }

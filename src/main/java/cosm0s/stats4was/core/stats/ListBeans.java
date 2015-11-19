@@ -13,29 +13,16 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListBeans implements OptionLauncher {
+public class ListBeans extends ListStats4Was {
 
-    private ManagementConnection managementConnection;
-    private static final String query = "*:*";
     private static final String name = "listBeans";
 
     public ListBeans(){}
 
-    @Override
-    public void start() {
-        this.managementConnection.connect();
-        this.showInL4j();
-    }
-
-    @Override
-    public void setManagementConnection(ManagementConnection managementConnection){
-        this.managementConnection = managementConnection;
-    }
-
-    private void showInL4j(){
-        MBeansUtils mbeansUtils = new MBeansUtils(this.managementConnection.getConnector().getAdminClient());
+    protected void showInL4j(){
+        MBeansUtils mbeansUtils = new MBeansUtils(getManagementConnection().getConnector().getAdminClient());
         List<BeanInfo> beanInfos = new LinkedList<BeanInfo>();
-        for(ObjectName objectName: mbeansUtils.getMBeans(query)){
+        for(ObjectName objectName: mbeansUtils.getMBeans(Constants.queryAll)){
             beanInfos.add(new BeanInfo(objectName.getKeyPropertyList()));
         }
         try {

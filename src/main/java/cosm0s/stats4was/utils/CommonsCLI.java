@@ -19,7 +19,7 @@ public class CommonsCLI {
 
     public static Map<String,String> parserArguments(String[] args) throws Stats4WasException {
 
-        L4j.getL4j().debug("Parsing args whit apache commons cli");
+        L4j.getL4j().debug("Parsing args with apache commons cli");
         Map<String, String> result = new HashMap<String, String>();
 
         CommandLineParser commandLineParser = new DefaultParser();
