@@ -1,6 +1,5 @@
 package cosm0s.stats4was.core.stats;
 
-import cosm0s.stats4was.core.connector.ManagementConnection;
 import cosm0s.stats4was.domain.BeanInfo;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.utils.Constants;
