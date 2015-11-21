@@ -19,9 +19,8 @@ public class ListBeans extends ListStats4Was {
     public ListBeans(){}
 
     protected void showInL4j(){
-        MBeansUtils mbeansUtils = new MBeansUtils(getManagementConnection().getConnector().getAdminClient());
         List<BeanInfo> beanInfos = new LinkedList<BeanInfo>();
-        for(ObjectName objectName: mbeansUtils.getMBeans(Constants.queryAll)){
+        for(ObjectName objectName: MBeansUtils.getMBeans(getManagementConnection().getConnector().getAdminClient(), Constants.queryAll)){
             beanInfos.add(new BeanInfo(objectName.getKeyPropertyList()));
         }
         try {

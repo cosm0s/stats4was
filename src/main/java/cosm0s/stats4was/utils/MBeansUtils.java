@@ -4,6 +4,7 @@ import com.ibm.websphere.management.AdminClient;
 import com.ibm.websphere.management.exception.ConnectorException;
 import com.ibm.websphere.management.exception.ConnectorNotAvailableException;
 import com.ibm.websphere.pmi.stat.WSStats;
+import com.ibm.ws.webservices.engine.utils.Admin;
 import cosm0s.stats4was.log.L4j;
 
 import javax.management.MalformedObjectNameException;
@@ -15,34 +16,24 @@ import java.util.Set;
 
 public class MBeansUtils {
 
-    private AdminClient adminClient;
-
-
-    public MBeansUtils(AdminClient adminClient) {
-        this.adminClient = adminClient;
-    }
-
-
-    public Set<ObjectName> getMBeans(String query) {
-        if(this.adminClient == null) {
+    public static Set<ObjectName> getMBeans(AdminClient adminClient, String query) {
+        if(adminClient == null) {
             throw new NullPointerException();
         }
         Set objects = null;
         try {
-            objects = this.adminClient.queryNames(new ObjectName(query), null);
+            objects = adminClient.queryNames(new ObjectName(query), null);
         } catch (ConnectorNotAvailableException e) {
             L4j.getL4j().warning("Connector not available");
         } catch (ConnectorException e) {
-            String[] classNameSplit = this.getClass().getName().split("\\.");
-            L4j.getL4j().error(classNameSplit[classNameSplit.length-1] + ", " + "Error in connector", e);
+            L4j.getL4j().error("Error in connector", e);
         } catch (MalformedObjectNameException e) {
-            String[] classNameSplit = this.getClass().getName().split("\\.");
-            L4j.getL4j().error(classNameSplit[classNameSplit.length-1] + ", " + "Object malformed", e);
+            L4j.getL4j().error("Object malformed", e);
         }
-        return this.castSetObjectNames(objects);
+        return castSetObjectNames(objects);
     }
 
-    public Set<ObjectName> castSetObjectNames(Set objecs){
+    public static Set<ObjectName> castSetObjectNames(Set objecs){
         Set<ObjectName> objectNames = new LinkedHashSet<ObjectName>();
         for(Object object: objecs){
             objectNames.add((ObjectName)object);
@@ -50,8 +41,8 @@ public class MBeansUtils {
         return objectNames;
     }
 
-    public ObjectName getMBean(String query) {
-        Set mbeans = this.getMBeans(query);
+    public static ObjectName getMBean(AdminClient adminClient, String query) {
+        Set mbeans = getMBeans(adminClient, query);
         ObjectName objectName = null;
         if(mbeans != null && mbeans.size() > 0) {
             objectName = (ObjectName) mbeans.iterator().next();
@@ -59,18 +50,13 @@ public class MBeansUtils {
         return objectName;
     }
 
-    public AdminClient getClient(){
-        return this.adminClient;
+    public static Set<ObjectName> getAllServerRuntimes(AdminClient adminClient)  {
+            return getMBeans(adminClient, "WebSphere:*,type=Server,j2eeType=J2EEServer");
     }
 
-
-    public Set<ObjectName> getAllServerRuntimes()  {
-            return this.getMBeans("WebSphere:*,type=Server,j2eeType=J2EEServer");
-    }
-
-    public Map<String,String> getPathHostChStats(){
+    public static Map<String,String> getPathHostChStats(AdminClient adminClient){
         Map<String,String> pathChstats = new HashMap<String, String>();
-        ObjectName dmgr = this.getMBean("WebSphere:processType=DeploymentManager,*");
+        ObjectName dmgr = getMBean(adminClient, "WebSphere:processType=DeploymentManager,*");
         String cell = dmgr.getKeyProperty("cell");
         if(cell != null) {
             String query = "WebSphere:processType=ManagedProcess,cell=" + cell + ",*";
@@ -79,7 +65,7 @@ public class MBeansUtils {
             String chStatsCell;
             String path = "";
             String host;
-            for (ObjectName objectName : this.getMBeans(query)) {
+            for (ObjectName objectName : getMBeans(adminClient, query)) {
                 chStatsNode = objectName.getKeyProperty("node");
                 chStatsHost = getHostByNode(chStatsNode);
                 chStatsCell = objectName.getKeyProperty("cell");
@@ -96,15 +82,15 @@ public class MBeansUtils {
         return pathChstats;
     }
 
-    public WSStats getWSStats(String node, String serverName) {
+    public static WSStats getWSStats(AdminClient adminClient, String node, String name) {
         WSStats wsStats = null;
-        ObjectName serverPerfMBean = this.getMBean("WebSphere:type=Perf,node=" + node + ",process=" + serverName + ",*");
-        ObjectName objectName = this.getMBean("WebSphere:name=" + serverName + ",node=" + node + ",process=" + serverName + ",type=Server,*");
+        ObjectName serverPerfMBean = getMBean(adminClient, "WebSphere:type=Perf,node=" + node + ",process=" + name + ",*");
+        ObjectName objectName = getMBean(adminClient, "WebSphere:name=" + name + ",node=" + node + ",process=" + name + ",type=Server,*");
         if (objectName != null) {
             String[] signature = new String[]{"javax.management.ObjectName", "java.lang.Boolean"};
             Object[] params = new Object[]{objectName, true};
             try {
-                wsStats = (WSStats) this.adminClient.invoke(serverPerfMBean, "getStatsObject", params, signature);
+                wsStats = (WSStats) adminClient.invoke(serverPerfMBean, "getStatsObject", params, signature);
             } catch (Exception e) {
                 L4j.getL4j().error("Capturer ", e);
             }
@@ -112,8 +98,8 @@ public class MBeansUtils {
         return wsStats;
     }
 
-    public ObjectName getPerfBean(String node, String serverName){
-        return this.getMBean("WebSphere:type=Perf,node=" + node + ",process=" + serverName + ",*");
+    public static ObjectName getPerfBean(AdminClient adminClient, String node, String name){
+        return getMBean(adminClient, "WebSphere:type=Perf,node=" + node + ",process=" + name + ",*");
     }
 
     public static String getHostByNode(String node){

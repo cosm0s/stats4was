@@ -16,11 +16,10 @@ public class ListAttributes extends ListStats4Was {
     private static final String name = "listAttributes";
 
     protected void showInL4j(){
-        MBeansUtils mbeansUtils = new MBeansUtils(getManagementConnection().getConnector().getAdminClient());
         int countBeans = 0;
         try {
             File file = UtilsFile.getFile(name);
-            for(ObjectName objectName: mbeansUtils.getMBeans(Constants.queryAll)){
+            for(ObjectName objectName: MBeansUtils.getMBeans(getManagementConnection().getConnector().getAdminClient(), Constants.queryAll)){
                 MBeanInfo mbeanInfo = getBean(objectName);
                 if(mbeanInfo.getAttributes().length >= 1) {
                     UtilsFile.print("#########################################", file);
