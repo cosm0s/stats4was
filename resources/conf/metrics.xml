@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Stats4was>
+    <PMIStatsType unit="true" unitseparator="_" separateMetric="false">
+        <CountStatistic count="true" />
+        <DoubleStatisc count="true"/>
+        <AverageStatistic count="true" total="false" min="false" max="true"/>
+        <BoundaryStatistic upperBound="true" lowebBound="false" />
+        <RangeStatistic highWaterMark="true" lowWaterMark="false" current="true" integral="false"/>
+        <TimeStatitic count="true" total="false" min="false" max="true"/>
+        <BoundedRangeStatistic upperBound="true" lowebBound="false" highWaterMark="true" lowWaterMark="false" current="true" integral="false"/>
+    </PMIStatsType>
+    <MetricGroups>
+        <MetricGroup prefix="jvm" unique="true" global="false">
+            <StatsType>jvmRuntimeModule</StatsType>
+            <Metrics>
+                <Metric id="1" name="HeapSize" scale="1024"/>
+                <Metric id="3" name="Used" sace="1024"/>
+                <Metric id="5" name="CpuUsage"/>
+                <Metric calculated="true" name="YE">
+                    <Expresion>3[upperbound]+5[]</Expresion>
+                </Metric>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="threadPool" unique="false" global="false">
+            <StatsType>threadPoolModule</StatsType>
+            <include>WebContainer,MessageListenerThreadPool</include>
+            <exclude>WebContainer</exclude>
+            <Metrics>
+                <Metric id="3" name="ActiveCount"/>
+                <Metric id="4" name="PoolSize"/>
+                <Metric id="8" name="ConcurrentHungThreadCount"/>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="transaction" unique="false" global="false">
+            <StatsType>transactionModule</StatsType>
+            <Metrics>
+                <Metric id="4" mame="ActiveCount"/>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="connection" unique="false" global="false">
+            <StatsType>connectionPoolModule</StatsType>
+            <Metrics>
+                <Metric id="5" name="PoolSize"/>
+                <Metric id="6" name="FreePoolSize"/>
+                <Metric id="7" name="WaitingThreadCount"/>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="j2c" unique="false" global="false">
+            <StatsType>j2cModule</StatsType>
+            <Metrics>
+                <Metric id="7"/>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="sessions" unique="false" global="false">
+            <StatsType>servletSessionsModule</StatsType>
+            <Metrics>
+                <Metric id="7" name="ConcurrentSessions"/>
+            </Metrics>
+        </MetricGroup>
+        <MetricGroup prefix="webApp" unique="false" global="false">
+            <StatsType>webAppModule</StatsType>
+            <Metrics>
+                <Metric id="13" name="ResponseTime"/>
+            </Metrics>
+        </MetricGroup>
+    </MetricGroups>
+</Stats4was>
