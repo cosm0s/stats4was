@@ -15,7 +15,6 @@ import java.util.Observable;
 
 public class StatsCollector extends Observable implements Runnable {
 
-
     private Sender sender;
     private int threadsNumber;
     private String name;
