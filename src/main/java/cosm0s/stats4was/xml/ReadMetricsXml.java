@@ -1,5 +1,6 @@
 package cosm0s.stats4was.xml;
 
+import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.xml.mapping.XMLStats4was;
 
 import javax.xml.bind.JAXBContext;
@@ -9,15 +10,15 @@ import java.io.File;
 
 public class ReadMetricsXml {
 
-    public static void main(String[] args) {
-
+    public static XMLStats4was getMetrics(String path) throws Stats4WasException {
+        return unmarshal(new File(path), XMLStats4was.class, path);
     }
 
-    private static XMLStats4was getMetrics() {
-        return unmarshal(new File("resources/conf/metrics.xml"), XMLStats4was.class);
+    public static XMLStats4was getMetrics(File file) throws Stats4WasException {
+        return unmarshal(file, XMLStats4was.class, file.getPath());
     }
 
-    private static <E> E unmarshal(File file, Class<E> type) {
+    private static <E> E unmarshal(File file, Class<E> type, String path) throws Stats4WasException {
         JAXBContext jaxbContext;
         Unmarshaller jaxbUnmarshaller;
         Object object = null;
@@ -25,15 +26,14 @@ public class ReadMetricsXml {
             jaxbContext = JAXBContext.newInstance(type);
             jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             object = jaxbUnmarshaller.unmarshal(file);
-        } catch (JAXBException e) {
-            System.out.println(e);
+        } catch (JAXBException es) {
+            throw new Stats4WasException("JAXB Exception in read metrics xml");
         }
         if (object == null) {
-            System.out.println("mm");
+            throw new Stats4WasException("Can't read the configuration file: " + path);
         } else {
             return type.cast(object);
         }
-        return null;
     }
 
 }

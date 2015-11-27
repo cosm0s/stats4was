@@ -4,11 +4,13 @@ import com.ibm.websphere.management.AdminClient;
 import com.ibm.websphere.management.exception.ConnectorException;
 import com.ibm.websphere.management.exception.ConnectorNotAvailableException;
 import cosm0s.stats4was.core.connector.ManagementConnection;
+import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.core.threads.StatsCollector;
 import cosm0s.stats4was.core.threads.observer.ThreadObserver;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.utils.DaemonContext;
 import cosm0s.stats4was.utils.MBeansUtils;
+import cosm0s.stats4was.xml.FindMetricsXml;
 
 import javax.management.ObjectName;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ public class ThreadManager implements OptionLauncher {
     private AdminClient adminClient;
     private boolean started;
     private long intervalInMili;
+    private FindMetricsXml findMetricsXml;
 
     @Override
     public void start() {
@@ -43,15 +46,19 @@ public class ThreadManager implements OptionLauncher {
     }
 
     public void init(){
+        this.findMetricsXml = new FindMetricsXml();
         this.managementConnection.connect();
         this.adminClient = this.managementConnection.getConnector().getAdminClient();
         this.started = true;
         try {
+            this.findMetricsXml.getAllMetricsConf();
             this.intervalInMili = Long.valueOf(DaemonContext.instance().getProperty("ElapsedThreadinterval")) * 1000;
             L4j.getL4j().debug("Elapsed thread interval: " + this.intervalInMili/1000 + " seconds");
         } catch (NumberFormatException ex) {
             //DEFAULT
             this.intervalInMili = 60000;
+        } catch (Stats4WasException ex) {
+            L4j.getL4j().error("Find metrics xml", ex);
         }
     }
 
@@ -94,6 +101,7 @@ public class ThreadManager implements OptionLauncher {
             if(!"dmgr".equals(node)) {
                 StatsCollector statsCollector = new StatsCollector(objectName.getKeyProperty("name"), node, threadCount++);
                 statsCollector.setManagementConnection(this.managementConnection);
+                statsCollector.setFindMetricsXml(this.findMetricsXml);
                 ThreadObserver threadObserver = new ThreadObserver();
                 statsCollector.addObserver(threadObserver);
                 statsCollectors.add(statsCollector);

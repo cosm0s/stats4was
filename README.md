@@ -1,4 +1,4 @@
-Stats4Was
+Stats4Was (Under development)
 =========
 [![Build Status](https://travis-ci.org/cosm0s/stats4was.png)](https://travis-ci.org/cosm0s/stats4was)
 

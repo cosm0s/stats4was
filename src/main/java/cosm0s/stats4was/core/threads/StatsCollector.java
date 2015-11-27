@@ -7,6 +7,7 @@ import cosm0s.stats4was.domain.Statistic;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.sender.Sender;
 import cosm0s.stats4was.utils.MBeansUtils;
+import cosm0s.stats4was.xml.FindMetricsXml;
 
 import javax.management.ObjectName;
 import java.util.List;
@@ -14,12 +15,13 @@ import java.util.Observable;
 
 public class StatsCollector extends Observable implements Runnable {
 
-    private StatisticsReader statisticsReader;
+
     private Sender sender;
     private int threadsNumber;
     private String name;
     private String node;
     private ManagementConnection managementConnection;
+    private FindMetricsXml findMetricsXml;
 
 
     public StatsCollector(String name, String node, int threadsNumber){
@@ -43,6 +45,17 @@ public class StatsCollector extends Observable implements Runnable {
         L4j.getL4j().debug("End thread: " + Thread.currentThread().getName() + " connection state: " + this.managementConnection.getConnector().getState());
     }
 
+    public List<Statistic> getStatistics() {
+        ObjectName perfMBean = MBeansUtils.getPerfBean(this.managementConnection.getConnector().getAdminClient(), this.node, this.name );
+        L4j.getL4j().debug("Perf Bean: " + String.valueOf(perfMBean));
+        WSStats wsStats = MBeansUtils.getWSStats(this.managementConnection.getConnector().getAdminClient(), this.node, this.name);
+        StatisticsReader statisticsReader = new StatisticsReader(perfMBean, wsStats);
+        statisticsReader.setName(this.name);
+        statisticsReader.setNode(this.node);
+        statisticsReader.setFindMetricsXml(this.findMetricsXml);
+        return statisticsReader.parser();
+    }
+
     public void setSender(Sender sender) {
         this.sender = sender;
     }
@@ -51,11 +64,7 @@ public class StatsCollector extends Observable implements Runnable {
         this.managementConnection = managementConnection;
     }
 
-    public List<Statistic> getStatistics() {
-        ObjectName perfMBean = MBeansUtils.getPerfBean(this.managementConnection.getConnector().getAdminClient(), this.node, this.name );
-        L4j.getL4j().debug("Perf Bean: " + String.valueOf(perfMBean));
-        WSStats wsStats = MBeansUtils.getWSStats(this.managementConnection.getConnector().getAdminClient(), this.node, this.name);
-        StatisticsReader statisticsReader = new StatisticsReader(perfMBean, wsStats, this.node, this.name);
-        return statisticsReader.parser();
+    public void setFindMetricsXml(FindMetricsXml findMetricsXml) {
+        this.findMetricsXml = findMetricsXml;
     }
 }
