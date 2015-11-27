@@ -11,7 +11,7 @@ public class XMLMetricGroup {
     private String prefix;
     private boolean unique;
     private boolean global;
-    private String xmlStatsType;
+    private XMLStatsType xmlStatsType;
     private XMLInclude xmlInclude;
     private XMLExclude xmlExclude;
     private XMLMetrics xmlMetrics;
@@ -44,12 +44,12 @@ public class XMLMetricGroup {
         this.global = global;
     }
 
-    public String getXmlStatsType() {
+    public XMLStatsType getXmlStatsType() {
         return xmlStatsType;
     }
 
-    @XmlAttribute(name="StatsType")
-    public void setXmlStatsType(String xmlStatsType) {
+    @XmlElement(name="StatsType")
+    public void setXmlStatsType(XMLStatsType xmlStatsType) {
         this.xmlStatsType = xmlStatsType;
     }
 

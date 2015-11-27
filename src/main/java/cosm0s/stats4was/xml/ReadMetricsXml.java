@@ -21,7 +21,7 @@ public class ReadMetricsXml {
     private static <E> E unmarshal(File file, Class<E> type, String path) throws Stats4WasException {
         JAXBContext jaxbContext;
         Unmarshaller jaxbUnmarshaller;
-        Object object = null;
+        Object object;
         try {
             jaxbContext = JAXBContext.newInstance(type);
             jaxbUnmarshaller = jaxbContext.createUnmarshaller();
