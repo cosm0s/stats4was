@@ -2,6 +2,7 @@ package cosm0s.stats4was.core.statistics;
 
 import com.ibm.websphere.pmi.stat.WSStatistic;
 import com.ibm.websphere.pmi.stat.WSStats;
+import cosm0s.stats4was.core.statistics.parser.StatisticsParser;
 import cosm0s.stats4was.domain.Statistic;
 import cosm0s.stats4was.log.L4j;
 import cosm0s.stats4was.utils.Utils;
@@ -34,7 +35,7 @@ public class StatisticsReader {
             for(XMLMetricGroup xmlMetricGroup:this.findMetricsXml.getXMLMetricGroup()){
                 WSStats typeStats = wsStats.getStats(xmlMetricGroup.getXmlStatsType().getStatsType());
                 if(typeStats != null){
-                    //stats.addAll();
+                    stats.addAll(getStatsType(xmlMetricGroup, typeStats, true));
                 } else {
                     L4j.getL4j().debug("Node: " + this.node + " Server: " + this.name + " Not found statstype " + xmlMetricGroup.getXmlStatsType().getStatsType());
                 }
@@ -68,16 +69,17 @@ public class StatisticsReader {
         List<Statistic> result = new LinkedList<Statistic>();
         for(WSStats substats: wsStats){
             String auxPath = path + "." + Utils.getParseBeanName(substats.getName());
-            if (!Utils.listContainsReg(xmlMetricGroup.getXmlExclude().getValue(), substats.getName())) {
+
+            if (xmlMetricGroup.getXmlExclude() == null || !Utils.listContainsReg(xmlMetricGroup.getXmlExclude().getValue(), substats.getName())) {
                 if (isInstance) {
-                    if (xmlMetricGroup.getXmlInclude().getValue() != null && xmlMetricGroup.getXmlInclude().getValue().size() > 0 && Utils.listContainsReg(xmlMetricGroup.getXmlInclude().getValue(), substats.getName())) {
+                    if (xmlMetricGroup.getXmlInclude() != null && xmlMetricGroup.getXmlInclude().getValue() != null && xmlMetricGroup.getXmlInclude().getValue().size() > 0 && Utils.listContainsReg(xmlMetricGroup.getXmlInclude().getValue(), substats.getName())) {
                         if (xmlMetricGroup.getGlobal() && substats.getSubStats().length > 0) {
                             for (XMLMetric metric : xmlMetricGroup.getXmlMetrics().getMetric()) {
                                 WSStatistic wsStatistic = substats.getStatistic(metric.getId());
                                 if (wsStatistic != null) {
                                     String metricName = (metric.getName() == null || metric.getName().length() == 0) ? wsStatistic.getName() : metric.getName();
-                                    //ParserWSStatistics parserWSStatistics = new ParserWSStatistics(wsStatistic, this.pmiStatsType, Utils.getHostByNode(this.node), auxPath, metricName);
-                                    //result.addAll(parserWSStatistics.parseStatistics());
+                                    StatisticsParser statisticsParser = new StatisticsParser(this.prefix, Utils.getHostByNode(this.node), metricName);
+                                    result.addAll(statisticsParser.parserStatistics(wsStatistic, this.findMetricsXml.getXMLPMIStatsType()));
                                 }
                             }
                         } else if (substats.getSubStats().length == 0) {
@@ -85,22 +87,22 @@ public class StatisticsReader {
                                 WSStatistic wsStatistic = substats.getStatistic(metric.getId());
                                 if (wsStatistic != null) {
                                     String metricName = (metric.getName() == null || metric.getName().length() == 0) ? wsStatistic.getName() : metric.getName();
-//                                    ParserWSStatistics parserWSStatistics = new ParserWSStatistics(wsStatistic, this.pmiStatsType, Utils.getHostByNode(this.node), auxPath, metricName);
-//                                    result.addAll(parserWSStatistics.parseStatistics());
+                                    StatisticsParser statisticsParser = new StatisticsParser(this.prefix, Utils.getHostByNode(this.node), metricName);
+                                    result.addAll(statisticsParser.parserStatistics(wsStatistic, this.findMetricsXml.getXMLPMIStatsType()));
                                 }
                             }
                         }
                         if (substats.getSubStats().length > 0) {
                             result.addAll(getInstances(Arrays.asList(substats.getSubStats()), xmlMetricGroup, auxPath, false));
                         }
-                    } else if (xmlMetricGroup.getXmlExclude().getValue() == null || xmlMetricGroup.getXmlExclude().getValue().size() == 0) {
+                    } else if (xmlMetricGroup.getXmlInclude() == null || xmlMetricGroup.getXmlExclude().getValue() == null || xmlMetricGroup.getXmlExclude().getValue().size() == 0) {
                         if (xmlMetricGroup.getGlobal() && substats.getSubStats().length > 0) {
                             for (XMLMetric metric : xmlMetricGroup.getXmlMetrics().getMetric()) {
                                 WSStatistic wsStatistic = substats.getStatistic(metric.getId());
                                 if (wsStatistic != null) {
                                     String metricName = (metric.getName() == null || metric.getName().length() == 0) ? wsStatistic.getName() : metric.getName();
-//                                    ParserWSStatistics parserWSStatistics = new ParserWSStatistics(wsStatistic, this.pmiStatsType, Utils.getHostByNode(this.node), auxPath, metricName);
-//                                    result.addAll(parserWSStatistics.parseStatistics());
+                                    StatisticsParser statisticsParser = new StatisticsParser(this.prefix, Utils.getHostByNode(this.node), metricName);
+                                    result.addAll(statisticsParser.parserStatistics(wsStatistic, this.findMetricsXml.getXMLPMIStatsType()));
                                 }
                             }
                         } else if (substats.getSubStats().length == 0) {
@@ -108,8 +110,8 @@ public class StatisticsReader {
                                 WSStatistic wsStatistic = substats.getStatistic(metric.getId());
                                 if (wsStatistic != null) {
                                     String metricName = (metric.getName() == null || metric.getName().length() == 0) ? wsStatistic.getName() : metric.getName();
-//                                    ParserWSStatistics parserWSStatistics = new ParserWSStatistics(wsStatistic, this.pmiStatsType, Utils.getHostByNode(this.node), auxPath, metricName);
-//                                    result.addAll(parserWSStatistics.parseStatistics());
+                                    StatisticsParser statisticsParser = new StatisticsParser(this.prefix, Utils.getHostByNode(this.node), metricName);
+                                    result.addAll(statisticsParser.parserStatistics(wsStatistic, this.findMetricsXml.getXMLPMIStatsType()));
                                 }
                             }
                         }
@@ -122,8 +124,8 @@ public class StatisticsReader {
                         WSStatistic wsStatistic = substats.getStatistic(metric.getId());
                         if (wsStatistic != null) {
                             String metricName = (metric.getName() == null || metric.getName().length() == 0) ? wsStatistic.getName() : metric.getName();
-//                            ParserWSStatistics parserWSStatistics = new ParserWSStatistics(wsStatistic, this.pmiStatsType, Utils.getHostByNode(this.node), auxPath, metricName);
-//                            result.addAll(parserWSStatistics.parseStatistics());
+                            StatisticsParser statisticsParser = new StatisticsParser(this.prefix, Utils.getHostByNode(this.node), metricName);
+                            result.addAll(statisticsParser.parserStatistics(wsStatistic, this.findMetricsXml.getXMLPMIStatsType()));
                         }
                     }
                     if (substats.getSubStats().length > 0) {

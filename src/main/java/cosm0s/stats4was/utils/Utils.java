@@ -17,9 +17,11 @@ public class Utils {
     }
 
     public static boolean listContainsReg(List<String> listString, String regex){
-        for(String string:listString){
-            if(string.matches(regex)){
-                return true;
+        if(listString != null) {
+            for (String string : listString) {
+                if (string.matches(regex)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -36,4 +38,11 @@ public class Utils {
         }
         return "N/A";
     }
+
+    public static String getHostByNode(String node){
+        node = node.toLowerCase();
+        String[] nodeSplit = node.split("node");
+        return nodeSplit[0];
+    }
+
 }

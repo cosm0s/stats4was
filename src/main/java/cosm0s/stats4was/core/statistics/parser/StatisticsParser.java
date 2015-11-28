@@ -65,7 +65,7 @@ public class StatisticsParser {
         } else if(wsStatistic != null){
             //l4j
         }
-        return null;
+        return statistics;
     }
 
 
