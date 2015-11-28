@@ -1,5 +1,7 @@
 package cosm0s.stats4was.utils;
 
+import com.ibm.websphere.pmi.stat.WSStatistic;
+
 import java.util.List;
 
 public class Utils {
@@ -21,5 +23,17 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static String getWSStatisticType(WSStatistic wsstatistic) {
+        String chain = wsstatistic.toString().replace(" ", "");
+
+        for(String type: chain.split("\\,")){
+            String[] splitType = type.split("=");
+            if("type".equals(splitType[0])) {
+                return splitType[1];
+            }
+        }
+        return "N/A";
     }
 }
