@@ -74,3 +74,6 @@ Also you need comment
         </repositories>
 ```
 
+License
+===========
+stats4was is licensed under version 2.0 of the Apache License. See the [LICENSE](https://github.com/cosm0s/stats4was/blob/master/LICENSE) file for details.
