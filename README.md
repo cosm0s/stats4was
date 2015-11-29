@@ -1,4 +1,4 @@
-Stats4Was (Under development)
+Stats4Was (Testing in websphere 6.1/8.5 -> Graphite (Sender))
 =========
 [![Build Status](https://travis-ci.org/cosm0s/stats4was.png)](https://travis-ci.org/cosm0s/stats4was)
 
