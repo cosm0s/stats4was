@@ -74,4 +74,8 @@ public class Statistic {
     public void setTimesTamp(long timesTamp) {
         this.timesTamp = timesTamp;
     }
+
+    public String standarMetric(){
+        return this.prefix + "." + this.metricName + this.metricSeparator + method + this.unity + this.metric + " " + this.timesTamp;
+    }
 }

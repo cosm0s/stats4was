@@ -15,7 +15,7 @@ import java.util.Observable;
 
 public class StatsCollector extends Observable implements Runnable {
 
-    private Sender sender;
+    private List<Sender> senders;
     private int threadsNumber;
     private String name;
     private String node;
@@ -36,7 +36,9 @@ public class StatsCollector extends Observable implements Runnable {
         List<Statistic> statistics = getStatistics();
         if(statistics != null && statistics.size() >0) {
             for (Statistic statistic : getStatistics()) {
-                //this.sender.send(statistic);
+                for(Sender sender:this.senders){
+                    sender.send(statistic);
+                }
             }
         } else {
             L4j.getL4j().info("Start thread: " + Thread.currentThread().getName() + " don't get statistics");
@@ -55,8 +57,8 @@ public class StatsCollector extends Observable implements Runnable {
         return statisticsReader.parser();
     }
 
-    public void setSender(Sender sender) {
-        this.sender = sender;
+    public void setSenders(List<Sender> senders) {
+        this.senders = senders;
     }
 
     public void setManagementConnection(ManagementConnection managementConnection) {

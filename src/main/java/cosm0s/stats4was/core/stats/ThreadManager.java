@@ -8,6 +8,8 @@ import cosm0s.stats4was.core.exception.Stats4WasException;
 import cosm0s.stats4was.core.threads.StatsCollector;
 import cosm0s.stats4was.core.threads.observer.ThreadObserver;
 import cosm0s.stats4was.log.L4j;
+import cosm0s.stats4was.sender.LoadSenders;
+import cosm0s.stats4was.sender.Sender;
 import cosm0s.stats4was.utils.DaemonContext;
 import cosm0s.stats4was.utils.MBeansUtils;
 import cosm0s.stats4was.xml.FindMetricsXml;
@@ -27,6 +29,7 @@ public class ThreadManager implements OptionLauncher {
     private boolean started;
     private long intervalInMili;
     private FindMetricsXml findMetricsXml;
+    private LoadSenders loadSenders;
 
     @Override
     public void start() {
@@ -46,6 +49,7 @@ public class ThreadManager implements OptionLauncher {
     }
 
     public void init(){
+        this.loadSenders = new LoadSenders(DaemonContext.instance().getProperty("Senders"));
         this.findMetricsXml = new FindMetricsXml();
         this.managementConnection.connect();
         this.adminClient = this.managementConnection.getConnector().getAdminClient();
@@ -102,6 +106,7 @@ public class ThreadManager implements OptionLauncher {
                 StatsCollector statsCollector = new StatsCollector(objectName.getKeyProperty("name"), node, threadCount++);
                 statsCollector.setManagementConnection(this.managementConnection);
                 statsCollector.setFindMetricsXml(this.findMetricsXml);
+                statsCollector.setSenders(this.loadSenders.getSendersClass());
                 ThreadObserver threadObserver = new ThreadObserver();
                 statsCollector.addObserver(threadObserver);
                 statsCollectors.add(statsCollector);
@@ -116,6 +121,16 @@ public class ThreadManager implements OptionLauncher {
         } catch (ConnectorException e) {
             if(e instanceof ConnectorNotAvailableException){
                 this.managementConnection.connect();
+            }
+        }
+        for(Sender sender:this.loadSenders.getSendersClass()) {
+            while (!sender.isConnected()) {
+                try {
+                    L4j.getL4j().warning("The sender is not connected , waiting to connect");
+                    Thread.sleep(this.intervalInMili / 2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
